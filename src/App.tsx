@@ -23,8 +23,8 @@ function App() {
         <Route path="dashboard" element={<DashboardLayout />}>
           <Route index element={<Home />} />
           <Route path="my-banks" element={<MyBanks />} />
-          <Route path="payments" element={<Payments />} />
-          <Route path="transactions" element={<TransactionHistory />} />
+          <Route path="payment-transfer" element={<Payments />} />
+          <Route path="transaction-history" element={<TransactionHistory />} />
           <Route path="connect-bank" element={<ConnectBank />} />
         </Route>
       </Routes>
