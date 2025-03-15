@@ -1,4 +1,4 @@
-import React from "react";
+
 import Logo from "@/assets/horizon-logo.svg";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router";
