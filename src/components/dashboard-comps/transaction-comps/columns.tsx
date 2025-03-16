@@ -1,4 +1,5 @@
 import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
 
 export type TransactionsProps = {
@@ -92,7 +93,22 @@ export const columns: ColumnDef<TransactionsProps>[] = [
   },
   {
     accessorKey: "amount",
-    header: "Amount",
+    header: () => <div>Amount</div>,
+    cell: ({ row }) => {
+      return (
+        <span
+          className={cn(
+            "font-medium",
+            row.original.status !== "success"
+              ? "text-red-600"
+              : "text-green-600",
+          )}
+        >
+          ${row.getValue("status") !== "success" ? "-" : "+"}$
+          {getStatus(row.getValue("amount"))}
+        </span>
+      );
+    },
   },
   {
     accessorKey: "status",

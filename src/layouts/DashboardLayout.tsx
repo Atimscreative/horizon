@@ -4,7 +4,7 @@ import { Outlet } from "react-router";
 
 export default function DashboardLayout() {
   return (
-    <section className="grid md:grid-cols-[300px_1fr]">
+    <section className="grid lg:grid-cols-[300px_1fr]">
       <div>
         <MobileDashboardNav />
         <DasboardSidebar />

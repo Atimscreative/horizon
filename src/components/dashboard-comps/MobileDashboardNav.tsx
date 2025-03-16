@@ -9,7 +9,7 @@ export default function MobileDashboardNav() {
   const [showNav, setShowNav] = useState<boolean>(false);
   return (
     <>
-      <header className="py-4 z-[999] bg-white sticky top-0 left-0 w-full md:hidden border-b border-gray-200">
+      <header className="py-4 z-[999] bg-white sticky top-0 left-0 w-full lg:hidden border-b border-gray-200">
         <div className="container mx-auto px-4 flex justify-between gap-3">
           <div className="flex items-center gap-3">
             <span

@@ -8,7 +8,7 @@ import { navMenus } from "@/utils/dashboard";
 const DasboardSidebar = () => {
   const location = useLocation();
   return (
-    <aside className="w-full hidden md:flex flex-col justify-between px-6 py-8 bg-white border-r border-gray-200 h-screen">
+    <aside className="w-full hidden lg:flex flex-col justify-between px-6 py-8 bg-white border-r border-gray-200 h-screen">
       <div>
         <Link to="/dashboard">
           <img src={Logo} alt="Horizon Logo" />
