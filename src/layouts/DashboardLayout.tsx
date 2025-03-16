@@ -9,7 +9,7 @@ export default function DashboardLayout() {
         <MobileDashboardNav />
         <DasboardSidebar />
       </div>
-      <div className="flex-1">
+      <div className="w-full h-auto py-6 px-4">
         <Outlet />
       </div>
     </section>

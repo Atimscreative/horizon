@@ -1,10 +1,12 @@
 import Logo from "@/assets/horizon-logo.svg";
 import { cn } from "@/lib/utils";
-import { Home, IdCard, LogOut } from "lucide-react";
-import { Link } from "react-router";
+import { LogOut } from "lucide-react";
+import { Link, useLocation } from "react-router";
 import UserImg from "@/assets/jsmastery.png";
+import { navMenus } from "@/utils/dashboard";
 
 const DasboardSidebar = () => {
+  const location = useLocation();
   return (
     <aside className="w-full hidden md:flex flex-col justify-between px-6 py-8 bg-white border-r border-gray-200 h-screen">
       <div>
@@ -24,17 +26,24 @@ const DasboardSidebar = () => {
         </div>
 
         {/* MENUS */}
-        <nav className="mt-8">
+        <nav className="mt-8 space-y-3">
           {navMenus.map((menu, index) => (
             <Link
               key={index}
               to={menu.to}
               className={cn(
-                "flex items-center group font-semibold duration-300 pr-3.5 py-4 text-label rounded-md hover:bg-gradient-to-r hover:from-main hover:to-secondary hover:text-white hover:pl-3.5"
-                // "bg-gradient-to-r from-main to-secondary text-white pl-3.5"
+                "flex items-center  rounded-[8px] text-label p-3 font-medium",
+                location.pathname === menu.to &&
+                  "bg-gradient-to-r from-main to-main2 text-white"
               )}
             >
-              {menu.icon}
+              <span>
+                <menu.icon
+                  variant="Outline"
+                  size={20}
+                  color={location.pathname === menu.to ? "#fff" : "#344054"}
+                />
+              </span>
               <span className="ml-4">{menu.name}</span>
             </Link>
           ))}
@@ -48,9 +57,9 @@ const DasboardSidebar = () => {
             alt="user avatar"
             className="w-12 h-12 rounded-full"
           />
-          <div>
-            <p className="font-semibold text-label">Adrian Hajdin</p>
-            <p className="text-body-light">adrian@jsmastery.pro</p>
+          <div className="flex flex-col">
+            <p className="font-semibold text-sm text-label">Adrian Hajdin</p>
+            <p className="text-body-light text-sm">adrian@jsmastery.pro</p>
           </div>
         </div>
         <span aria-label="Logout" className="cursor-pointer text-body-light">
@@ -62,41 +71,3 @@ const DasboardSidebar = () => {
 };
 
 export default DasboardSidebar;
-
-export const navMenus = [
-  {
-    name: "Dashboard",
-    to: "/dashboard",
-    icon: (
-      <Home className="text-body-light duration-300 group-hover:text-white" />
-    ),
-  },
-  {
-    name: "My Banks",
-    to: "/dashboard/my-banks",
-    icon: (
-      <Home className="text-body-light duration-300 group-hover:text-white" />
-    ),
-  },
-  {
-    name: "Transaction History",
-    to: "/dashboard/transaction-history",
-    icon: (
-      <Home className="text-body-light duration-300 group-hover:text-white" />
-    ),
-  },
-  {
-    name: "Payment Transfer",
-    to: "/dashboard/payment-transfer",
-    icon: (
-      <Home className="text-body-light duration-300 group-hover:text-white" />
-    ),
-  },
-  {
-    name: "Connect Bank",
-    to: "/dashboard/connect-bank",
-    icon: (
-      <IdCard className="text-body-light duration-300 group-hover:text-white" />
-    ),
-  },
-];
