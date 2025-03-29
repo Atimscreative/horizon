@@ -14,20 +14,20 @@ export default function MobileDashboardSidebar({ open, setOpen }: Props) {
   return (
     <aside
       className={cn(
-        "fixed w-full duration-300 top-0 h-screen pt-20 transition-all bg-black/20",
-        open ? "left-0 opacity-100 " : "-left-full opacity-0"
+        "fixed top-0 z-40 h-screen w-full bg-black/20 pt-20 transition-all duration-300",
+        open ? "left-0 opacity-100" : "-left-full opacity-0",
       )}
     >
-      <nav className="px-4 w-[90%] py-10 space-y-4 bg-white h-full">
+      <nav className="h-full w-[90%] space-y-4 bg-white px-4 py-10">
         {navMenus.map((menu, index) => (
           <Link
             key={index}
             onClick={() => setOpen(false)}
             to={menu.to}
             className={cn(
-              "flex items-center group rounded-[8px] text-label p-3 font-medium hover:text-main",
+              "group text-label hover:text-main flex items-center rounded-[8px] p-3 font-medium",
               location.pathname === menu.to &&
-                "bg-gradient-to-r from-main to-main2 text-white"
+                "from-main to-main2 bg-gradient-to-r text-white",
             )}
           >
             <span>

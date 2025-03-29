@@ -9,12 +9,13 @@ import {
   columns,
   TransactionsProps,
 } from "@/components/dashboard-comps/transaction-comps/columns";
+import Card from "@/components/widgets/card";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState("chase-bank");
   return (
     <section className="overflow-x-clip">
-      <div>
+      <div className="mb-6">
         <h1 className="text-3xl font-semibold">
           Welcome, <span className="text-main">Adrian</span>
         </h1>
@@ -22,7 +23,7 @@ export default function Home() {
           Access & manage your account and transactions efficiently.
         </p>
       </div>
-
+      <Card />
       {/* BANK INFO/BALANCE */}
       <div className="rounded-2xl border border-[#EAECF0] p-6">
         <div></div>
@@ -89,7 +90,7 @@ export default function Home() {
               </div>
 
               {/* TABLE */}
-              <div className="w-full overflow-x-hidden">
+              <div className="hidden w-full overflow-x-hidden md:block">
                 <div className="container mx-auto py-10">
                   <DataTable columns={columns} data={dummyData} />
                 </div>

@@ -1,5 +1,5 @@
 import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
+import { cn, formattedDate } from "@/lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
 
 export type TransactionsProps = {
@@ -21,7 +21,7 @@ type categoryProp =
   | "other";
 
 function getStatus(status: statusProp) {
-  switch (status?.toLowerCase()) {
+  switch (status?.toString().toLowerCase()) {
     case "pending":
       return (
         <Badge className="items-center gap-2 rounded-full bg-amber-500/10 px-2 py-1 text-xs font-medium text-amber-500 capitalize">
@@ -120,6 +120,9 @@ export const columns: ColumnDef<TransactionsProps>[] = [
   {
     accessorKey: "createdAt",
     header: "Date",
+    cell: ({ row }) => {
+      return <>{formattedDate(row.getValue("createdAt"))}</>;
+    },
   },
   {
     accessorKey: "category",

@@ -9,6 +9,7 @@ import Payments from "./pages/dashboard/Payments";
 import TransactionHistory from "./pages/dashboard/TransactionHistory";
 import ConnectBank from "./pages/dashboard/ConnectBank";
 import Homepage from "./pages/Homepage";
+import Verify from "./pages/authentication/Verify";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route element={<AuthLayout />}>
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
+          <Route path="verify" element={<Verify />} />
         </Route>
 
         <Route path="dashboard" element={<DashboardLayout />}>

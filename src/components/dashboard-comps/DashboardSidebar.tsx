@@ -4,23 +4,25 @@ import { LogOut } from "lucide-react";
 import { Link, useLocation } from "react-router";
 import UserImg from "@/assets/jsmastery.png";
 import { navMenus } from "@/utils/dashboard";
+import { useUser } from "@/hooks/useUser";
 
 const DasboardSidebar = () => {
   const location = useLocation();
+  const { logout } = useUser();
   return (
-    <aside className="w-full hidden lg:flex flex-col justify-between px-6 py-8 bg-white border-r border-gray-200 h-screen">
+    <aside className="hidden h-screen w-full flex-col justify-between border-r border-gray-200 bg-white px-6 py-8 lg:flex">
       <div>
         <Link to="/dashboard">
           <img src={Logo} alt="Horizon Logo" />
         </Link>
 
-        <div className="w-full mt-6">
+        <div className="mt-6 w-full">
           <input
             type="text"
             id="search"
             aria-label="Search"
             placeholder="Search..."
-            className="mt-1 block w-full h-11 px-3 py-2 border placeholder:text-body-light border-gray-300 rounded-md focus:outline-none focus:ring-main focus:border-main text-sm"
+            className="placeholder:text-body-light focus:ring-main focus:border-main mt-1 block h-11 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none"
           />
           <span></span>
         </div>
@@ -32,9 +34,9 @@ const DasboardSidebar = () => {
               key={index}
               to={menu.to}
               className={cn(
-                "flex items-center  rounded-[8px] text-label p-3 font-medium",
+                "text-label flex items-center rounded-[8px] p-3 font-medium",
                 location.pathname === menu.to &&
-                  "bg-gradient-to-r from-main to-main2 text-white"
+                  "from-main to-main2 bg-gradient-to-r text-white",
               )}
             >
               <span>
@@ -50,19 +52,23 @@ const DasboardSidebar = () => {
         </nav>
       </div>
 
-      <div className="border-t flex justify-between items-center border-gray-200 py-4">
+      <div className="flex items-center justify-between border-t border-gray-200 py-4">
         <div className="inline-flex items-center gap-3">
           <img
             src={UserImg}
             alt="user avatar"
-            className="w-12 h-12 rounded-full"
+            className="h-12 w-12 rounded-full"
           />
           <div className="flex flex-col">
-            <p className="font-semibold text-sm text-label">Adrian Hajdin</p>
+            <p className="text-label text-sm font-semibold">Adrian Hajdin</p>
             <p className="text-body-light text-sm">adrian@jsmastery.pro</p>
           </div>
         </div>
-        <span aria-label="Logout" className="cursor-pointer text-body-light">
+        <span
+          aria-label="Logout"
+          onClick={() => logout()}
+          className="text-body-light cursor-pointer"
+        >
           <LogOut size={24} />
         </span>
       </div>
