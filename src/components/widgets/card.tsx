@@ -4,17 +4,18 @@ import { Copy, Nfc } from "lucide-react";
 type Props = {
   canCopyDetails?: boolean;
   colorType?: "A" | "B" | "C";
-  cardType: "mastercard" | "visa" | "verve";
+  cardType?: "mastercard" | "visa" | "verve";
+  className?: string;
 };
 
 const cardColor = (type: "A" | "B" | "C") => {
   switch (type) {
     case "A":
-      return "bg-[url(src/assets/Lines.svg),linear-gradient(#0179fe,#4893ff)]";
+      return "bg-[url(/src/assets/Lines.svg),linear-gradient(#0179fe,#4893ff)]";
     case "B":
-      return "bg-[url(src/assets/Lines.svg),linear-gradient(#5E37FF,#4e2cd3)]";
+      return "bg-[url(/src/assets/Lines.svg),linear-gradient(#5E37FF,#4e2cd3)]";
     case "C":
-      return "bg-[url(src/assets/Lines.svg),url(src/assets/gradientbg.jpg)] bg-cover after:absolute after:top-0 after:left-0 after:z-0 after:block after:h-full after:w-[70%] after:bg-[#344054]";
+      return "bg-[url(/src/assets/Lines.svg),url(/src/assets/gradientbg.jpg)] bg-cover after:absolute after:top-0 after:left-0 after:z-0 after:block after:h-full after:w-[70%] after:bg-[#344054]";
   }
 };
 
@@ -36,12 +37,14 @@ export default function Card({
   canCopyDetails = false,
   colorType = "C",
   cardType = "mastercard",
+  className,
 }: Props) {
   return (
     <div
       className={cn(
         "relative flex h-[180px] w-[300px] flex-col justify-between overflow-hidden rounded-2xl px-3.5 py-4",
         cardColor(colorType),
+        className,
       )}
     >
       <div className="flex items-center justify-between">

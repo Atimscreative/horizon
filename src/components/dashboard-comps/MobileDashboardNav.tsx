@@ -9,12 +9,12 @@ export default function MobileDashboardNav() {
   const [showNav, setShowNav] = useState<boolean>(false);
   return (
     <>
-      <header className="py-4 z-[999] bg-white sticky top-0 left-0 w-full lg:hidden border-b border-gray-200">
-        <div className="container mx-auto px-4 flex justify-between gap-3">
+      <header className="absolute top-0 left-0 z-[999] w-full border-b border-gray-200 bg-white py-4 lg:hidden">
+        <div className="container mx-auto flex justify-between gap-3 px-4">
           <div className="flex items-center gap-3">
             <span
               onClick={() => setShowNav((prev) => !prev)}
-              className="inline-flex cursor-pointer items-center justify-center w-9 h-9 bg-gradient-to-r to-main2 from-main rounded-[8px]"
+              className="to-main2 from-main inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-[8px] bg-gradient-to-r"
             >
               {!showNav ? (
                 <HambergerMenu size="24" color="#fff" />
@@ -29,10 +29,10 @@ export default function MobileDashboardNav() {
             <img
               src={UserImg}
               alt="user avatar"
-              className="w-12 h-12 rounded-full"
+              className="h-12 w-12 rounded-full"
             />
-            <div className="sm:flex flex-col hidden">
-              <p className="font-semibold text-sm text-label">Adrian Hajdin</p>
+            <div className="hidden flex-col sm:flex">
+              <p className="text-label text-sm font-semibold">Adrian Hajdin</p>
               <p className="text-body-light text-sm">adrian@jsmastery.pro</p>
             </div>
           </div>

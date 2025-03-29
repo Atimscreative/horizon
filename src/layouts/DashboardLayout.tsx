@@ -30,8 +30,10 @@ export default function DashboardLayout() {
         <MobileDashboardNav />
         <DasboardSidebar />
       </div>
-      <div className="h-auto w-full px-4 py-6">
-        <Outlet />
+      <div className="h-auto w-full lg:h-screen lg:overflow-y-auto">
+        <div>
+          <Outlet />
+        </div>
       </div>
     </section>
   );
