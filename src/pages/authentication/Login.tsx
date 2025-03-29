@@ -1,47 +1,91 @@
 import Logo from "@/assets/horizon-logo.svg";
+import { useUser } from "@/hooks/useUser";
 import { Link } from "react-router";
+import * as yup from "yup";
+import { useForm } from "react-hook-form";
+import { cn } from "@/lib/utils";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { Button } from "@/components/ui/button";
+import { Loader } from "lucide-react";
+
+const schema = yup.object().shape({
+  email: yup.string().email("Enter a valid email").required("Enter your email"),
+  password: yup.string().required("Enter your password"),
+});
 
 export default function Login() {
+  const user = useUser();
+
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
+
+  const handleUserLogin = (data: { email: string; password: string }) => {
+    console.log(data);
+    user?.login(data.email, data.password);
+  };
   return (
     <div className="w-full sm:w-[450px]">
       <div className="mb-8">
-        <img src={Logo} alt="Horizon Logo" className="w-[150px] mb-10" />
-        <h1 className="text-heading font-bold text-4xl mb-3">Log in</h1>
+        <img src={Logo} alt="Horizon Logo" className="mb-10 w-[150px]" />
+        <h1 className="text-heading mb-3 text-4xl font-bold">Log in</h1>
         <p className="text-body">Welcome back! Please enter your details.</p>
       </div>
-      <form id="login">
+      <form id="login" onSubmit={handleSubmit(handleUserLogin)}>
         <div className="mb-4">
           <label
             htmlFor="email"
-            className="block text-sm font-medium text-label mb-1.5"
+            className="text-label mb-1.5 block text-sm font-medium"
           >
             Email
           </label>
           <input
+            {...register("email")}
             type="email"
             name="email"
             id="email"
-            autoComplete="off"
+            // autoComplete="off"
             placeholder="Enter your email"
-            className="mt-1 block w-full h-11 px-3 py-2 border placeholder:text-body-light border-gray-300 rounded-md focus:outline-none focus:ring-main focus:border-main text-sm"
+            className={cn(
+              "placeholder:text-body-light focus:ring-main focus:border-main mt-1 block h-11 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none",
+              errors.email && "border-red-600",
+            )}
           />
+          {errors.email && (
+            <p className="mt-2 text-sm text-red-600">
+              {errors.email.message as string}
+            </p>
+          )}
         </div>
 
         <div className="mb-4">
           <label
             htmlFor="password"
-            className="block text-sm font-medium text-label mb-1.5"
+            className="text-label mb-1.5 block text-sm font-medium"
           >
             Password
           </label>
           <input
+            {...register("password")}
             type="password"
             name="password"
             id="password"
             autoComplete="current-password"
             placeholder="Enter your password"
-            className="mt-1 block w-full h-11 px-3 py-2 border placeholder:text-body-light border-gray-300 rounded-md focus:outline-none focus:ring-main focus:border-main text-sm"
+            className={cn(
+              "placeholder:text-body-light focus:ring-main focus:border-main mt-1 block h-11 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none",
+              errors.password && "border-red-600",
+            )}
           />
+          {errors.password && (
+            <p className="mt-2 text-sm text-red-600">
+              {errors.password.message as string}
+            </p>
+          )}
         </div>
 
         <div className="flex items-center justify-between">
@@ -50,7 +94,7 @@ export default function Login() {
               id="remember-me"
               name="remember-me"
               type="checkbox"
-              className="h-4 w-4 text-main focus:ring-main border-gray-300 rounded"
+              className="text-main focus:ring-main h-4 w-4 rounded border-gray-300"
             />
             <label
               htmlFor="remember-me"
@@ -63,7 +107,7 @@ export default function Login() {
           <div className="text-sm">
             <Link
               to="/forgot-password"
-              className="font-semibold bg-gradient-to-r from-main to-secondary bg-clip-text text-transparent"
+              className="from-main to-main2 bg-gradient-to-r bg-clip-text font-semibold text-transparent"
             >
               Forgot your password?
             </Link>
@@ -71,18 +115,22 @@ export default function Login() {
         </div>
 
         <div className="mt-6">
-          <button
+          <Button
             type="submit"
-            className="w-full flex h-auto justify-center cursor-pointer py-2.5 px-4 border border-transparent rounded-md font-semibold text-white from-main to-secondary bg-gradient-to-r hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-main"
+            disabled={user?.loading}
+            className="from-main to-main2 hover:bg-secondary focus:ring-main disabled:bg-main/50 flex h-auto w-full cursor-pointer items-center justify-center gap-2 rounded-md border border-transparent bg-gradient-to-r px-4 py-2.5 font-semibold text-white focus:ring-2 focus:ring-offset-2 focus:outline-none"
           >
+            {user?.loading && (
+              <Loader className="animate-spin" color="#fff" size="20" />
+            )}
             Login
-          </button>
+          </Button>
 
-          <p className="text-center mt-8 text-body">
+          <p className="text-body mt-8 text-center">
             Don't have an account?{" "}
             <Link
               to="/register"
-              className="font-semibold bg-gradient-to-r from-main to-secondary bg-clip-text text-transparent"
+              className="from-main to-main2 bg-gradient-to-r bg-clip-text font-semibold text-transparent"
             >
               Sign up
             </Link>

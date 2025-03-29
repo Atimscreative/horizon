@@ -1,31 +1,76 @@
 import Logo from "@/assets/horizon-logo.svg";
 import { Link } from "react-router";
+import * as yup from "yup";
+import { useForm } from "react-hook-form";
+import { cn } from "@/lib/utils";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useUser } from "@/hooks/useUser";
+import { RegisterFormInputs } from "@/context/user";
+import { Loader } from "lucide-react";
+import { Button } from "@/components/ui/button";
+
+const schema = yup.object().shape({
+  firstName: yup.string().required("Enter your first name"),
+  lastName: yup.string().required("Enter your last name"),
+  address: yup.string().required("Enter your address"),
+  state: yup.string().required("Enter your state"),
+  postalCode: yup.string().required("Enter your postal code"),
+  dateOfBirth: yup
+    .string()
+    .matches(/^\d{4}-\d{2}-\d{2}$/, "Enter a valid date (YYYY-MM-DD)")
+    .required("Enter your date of birth"),
+  ssn: yup
+    .string()
+    .matches(/^\d{4}$/, "Enter last 4 digits of SSN")
+    .required("Enter your SSN"),
+  email: yup.string().email("Enter a valid email").required("Enter your email"),
+  password: yup
+    .string()
+    .min(6, "Password must be at least 6 characters")
+    .required("Enter your password"),
+});
 
 export default function Register() {
+  const user = useUser();
+
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+  } = useForm<RegisterFormInputs>({
+    resolver: yupResolver(schema),
+  });
+
+  const handleUserRegister = (data: any) => {
+    console.log(data);
+    user?.register(data);
+  };
+
   return (
-    <div className="w-full sm:w-[450px] pb-6">
+    <div className="w-full pb-6 sm:w-[450px]">
       <div className="mb-8">
-        <img src={Logo} alt="Horizon Logo" className="w-[150px] mb-10" />
-        <h1 className="text-heading font-bold text-4xl mb-3">Sign up</h1>
+        <img src={Logo} alt="Horizon Logo" className="mb-10 w-[150px]" />
+        <h1 className="text-heading mb-3 text-4xl font-bold">Sign up</h1>
         <p className="text-body">Please enter your details.</p>
       </div>
-      <form id="login">
-        <div className="grid grid-cols-2 gap-4 mb-4">
+      <form id="register" onSubmit={handleSubmit(handleUserRegister)}>
+        <div className="mb-4 grid grid-cols-2 gap-4">
           {/* ---------- FIRSTNAME -------- */}
           <div className="">
             <label
               htmlFor="firstName"
-              className="block text-sm font-medium text-label mb-1.5"
+              className="text-label mb-1.5 block text-sm font-medium"
             >
               First Name
             </label>
             <input
+              {...register("firstName")}
               type="text"
               name="firstName"
               id="firstName"
               autoComplete="off"
               placeholder="ex: John"
-              className="mt-1 block w-full h-11 px-3 py-2 border placeholder:text-body-light border-gray-300 rounded-md focus:outline-none focus:ring-main focus:border-main text-sm"
+              className="placeholder:text-body-light focus:ring-main focus:border-main mt-1 block h-11 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none"
             />
           </div>
 
@@ -33,17 +78,18 @@ export default function Register() {
           <div className="">
             <label
               htmlFor="lastName"
-              className="block text-sm font-medium text-label mb-1.5"
+              className="text-label mb-1.5 block text-sm font-medium"
             >
               Last Name
             </label>
             <input
+              {...register("lastName")}
               type="text"
               name="lastName"
               id="lastName"
               autoComplete="off"
               placeholder="ex: Doe"
-              className="mt-1 block w-full h-11 px-3 py-2 border placeholder:text-body-light border-gray-300 rounded-md focus:outline-none focus:ring-main focus:border-main text-sm"
+              className="placeholder:text-body-light focus:ring-main focus:border-main mt-1 block h-11 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none"
             />
           </div>
         </div>
@@ -52,37 +98,39 @@ export default function Register() {
         <div className="mb-4">
           <label
             htmlFor="address"
-            className="block text-sm font-medium text-label mb-1.5"
+            className="text-label mb-1.5 block text-sm font-medium"
           >
             Address
           </label>
           <input
+            {...register("address")}
             type="text"
             name="address"
             id="address"
             autoComplete="off"
             placeholder="Enter your specific address"
-            className="mt-1 block w-full h-11 px-3 py-2 border placeholder:text-body-light border-gray-300 rounded-md focus:outline-none focus:ring-main focus:border-main text-sm"
+            className="placeholder:text-body-light focus:ring-main focus:border-main mt-1 block h-11 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none"
           />
         </div>
 
         {/* STATE & POSTAL */}
-        <div className="grid grid-cols-2 gap-4 mb-4">
+        <div className="mb-4 grid grid-cols-2 gap-4">
           {/* ---------- STATE -------- */}
           <div className="">
             <label
               htmlFor="state"
-              className="block text-sm font-medium text-label mb-1.5"
+              className="text-label mb-1.5 block text-sm font-medium"
             >
               State
             </label>
             <input
+              {...register("state")}
               type="text"
               name="state"
               id="state"
               autoComplete="off"
               placeholder="ex: NY"
-              className="mt-1 block w-full h-11 px-3 py-2 border placeholder:text-body-light border-gray-300 rounded-md focus:outline-none focus:ring-main focus:border-main text-sm"
+              className="placeholder:text-body-light focus:ring-main focus:border-main mt-1 block h-11 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none"
             />
           </div>
 
@@ -90,37 +138,39 @@ export default function Register() {
           <div className="">
             <label
               htmlFor="postalCode"
-              className="block text-sm font-medium text-label mb-1.5"
+              className="text-label mb-1.5 block text-sm font-medium"
             >
               Postal Code
             </label>
             <input
+              {...register("postalCode")}
               type="text"
               name="postalCode"
               id="postalCode"
               autoComplete="off"
               placeholder="ex: 11101"
-              className="mt-1 block w-full h-11 px-3 py-2 border placeholder:text-body-light border-gray-300 rounded-md focus:outline-none focus:ring-main focus:border-main text-sm"
+              className="placeholder:text-body-light focus:ring-main focus:border-main mt-1 block h-11 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none"
             />
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 mb-4">
+        <div className="mb-4 grid grid-cols-2 gap-4">
           {/* ---------- DATE OF BIRTH -------- */}
           <div className="">
             <label
               htmlFor="dateOfBirth"
-              className="block text-sm font-medium text-label mb-1.5"
+              className="text-label mb-1.5 block text-sm font-medium"
             >
               Date of Birth
             </label>
             <input
+              {...register("dateOfBirth")}
               type="text"
               name="dateOfBirth"
               id="dateOfBirth"
               autoComplete="off"
               placeholder="yyyy-mm-dd"
-              className="mt-1 block w-full h-11 px-3 py-2 border placeholder:text-body-light border-gray-300 rounded-md focus:outline-none focus:ring-main focus:border-main text-sm"
+              className="placeholder:text-body-light focus:ring-main focus:border-main mt-1 block h-11 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none"
             />
           </div>
 
@@ -128,17 +178,21 @@ export default function Register() {
           <div className="">
             <label
               htmlFor="SSN"
-              className="block text-sm font-medium text-label mb-1.5"
+              className="text-label mb-1.5 block text-sm font-medium"
             >
               SSN
             </label>
             <input
+              {...register("ssn")}
               type="text"
-              name="SSN"
-              id="SSN"
+              name="ssn"
+              id="ssn"
               autoComplete="off"
               placeholder="ex: 1234"
-              className="mt-1 block w-full h-11 px-3 py-2 border placeholder:text-body-light border-gray-300 rounded-md focus:outline-none focus:ring-main focus:border-main text-sm"
+              className={cn(
+                "placeholder:text-body-light focus:ring-main focus:border-main mt-1 block h-11 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none",
+                errors.ssn && "border-red-600",
+              )}
             />
           </div>
         </div>
@@ -147,51 +201,72 @@ export default function Register() {
         <div className="mb-4">
           <label
             htmlFor="email"
-            className="block text-sm font-medium text-label mb-1.5"
+            className="text-label mb-1.5 block text-sm font-medium"
           >
             Email
           </label>
           <input
+            {...register("email")}
             type="email"
             name="email"
             id="email"
-            autoComplete="off"
+            // autoComplete="off"
             placeholder="Enter your email"
-            className="mt-1 block w-full h-11 px-3 py-2 border placeholder:text-body-light border-gray-300 rounded-md focus:outline-none focus:ring-main focus:border-main text-sm"
+            className={cn(
+              "placeholder:text-body-light focus:ring-main focus:border-main mt-1 block h-11 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none",
+              errors.email && "border-red-600",
+            )}
           />
+          {errors.email && (
+            <p className="mt-2 text-sm text-red-600">
+              {errors.email.message as string}
+            </p>
+          )}
         </div>
 
         {/* PASSWORD */}
         <div className="mb-4">
           <label
             htmlFor="password"
-            className="block text-sm font-medium text-label mb-1.5"
+            className="text-label mb-1.5 block text-sm font-medium"
           >
             Password
           </label>
           <input
+            {...register("password")}
             type="password"
             name="password"
             id="password"
             autoComplete="current-password"
             placeholder="Enter your password"
-            className="mt-1 block w-full h-11 px-3 py-2 border placeholder:text-body-light border-gray-300 rounded-md focus:outline-none focus:ring-main focus:border-main text-sm"
+            className={cn(
+              "placeholder:text-body-light focus:ring-main focus:border-main mt-1 block h-11 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none",
+              errors.password && "border-red-600",
+            )}
           />
+          {errors.password && (
+            <p className="mt-2 text-sm text-red-600">
+              {errors.password.message as string}
+            </p>
+          )}
         </div>
 
         <div className="mt-6">
-          <button
-            type="submit"
-            className="w-full flex h-auto justify-center cursor-pointer py-2.5 px-4 border border-transparent rounded-md font-semibold text-white from-main to-secondary bg-gradient-to-r hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-main"
+          <Button
+            disabled={user?.loading}
+            className="from-main to-main2 hover:bg-secondary focus:ring-main disabled:bg-main/50 flex h-auto w-full cursor-pointer items-center justify-center gap-2 rounded-md border border-transparent bg-gradient-to-r px-4 py-2.5 font-semibold text-white focus:ring-2 focus:ring-offset-2 focus:outline-none"
           >
+            {user?.loading && (
+              <Loader className="animate-spin" color="#fff" size="20" />
+            )}
             Sign up
-          </button>
+          </Button>
 
-          <p className="text-center mt-8 text-body">
+          <p className="text-body mt-8 text-center">
             Already have an account?{" "}
             <Link
               to="/login"
-              className="font-semibold bg-gradient-to-r from-main to-secondary bg-clip-text text-transparent"
+              className="from-main to-main2 bg-gradient-to-r bg-clip-text font-semibold text-transparent"
             >
               Sign In
             </Link>
