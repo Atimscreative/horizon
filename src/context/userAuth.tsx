@@ -1,7 +1,6 @@
-import { ID } from "appwrite";
 import { useState } from "react";
-import { account, databases } from "../lib/appwrite";
 import { UserContext } from "@/hooks/useUser";
+import { account } from "@/lib/appwrite";
 
 // type IRegister = {
 //   email: string;
@@ -20,14 +19,20 @@ export interface RegisterFormInputs {
   password: string;
 }
 
-
-
 export default function UserProvider(props: any) {
   const [user, setUser] = useState<null | any>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
+  async function logout() {
+    await account.deleteSession("current");
+    setUser(null);
+    window.location.replace("/login");
+  }
+
   return (
-    <UserContext.Provider value={{ user, loading, setLoading, setUser }}>
+    <UserContext.Provider
+      value={{ user, loading, setLoading, setUser, logout }}
+    >
       {props.children}
     </UserContext.Provider>
   );

@@ -5,6 +5,7 @@ export const UserContext = createContext<{
   setUser: (user: any) => void;
   loading: boolean;
   setLoading: (status: boolean) => void;
+  logout: () => Promise<void>;
 } | null>(null);
 
 export function useUser() {
@@ -17,6 +18,7 @@ export function useUser() {
       loading: false,
       setUser: () => {},
       setLoading: () => {},
+      logout: async () => {},
     };
   }
 
