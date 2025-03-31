@@ -1,6 +1,6 @@
 import Logo from "@/assets/horizon-logo.svg";
 import { useUser } from "@/hooks/useUser";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { cn } from "@/lib/utils";
@@ -8,6 +8,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Button } from "@/components/ui/button";
 import { Eye, EyeClosed, Loader } from "lucide-react";
 import { useState } from "react";
+import { account } from "@/lib/appwrite";
 
 const schema = yup.object().shape({
   email: yup.string().email("Enter a valid email").required("Enter your email"),
@@ -15,7 +16,8 @@ const schema = yup.object().shape({
 });
 
 export default function Login() {
-  const user = useUser();
+  const navigate = useNavigate();
+  const { setLoading, user, setUser } = useUser();
   const [visible, setVisible] = useState<boolean>(false);
   const {
     register,
@@ -26,9 +28,21 @@ export default function Login() {
   });
 
   // HANDLE USER LOGIN
-  const handleUserLogin = (data: { email: string; password: string }) => {
-    console.log(data);
-    user?.login(data.email, data.password);
+  const handleUserLogin = async (data: { email: string; password: string }) => {
+    const { email, password } = data;
+    setLoading(true);
+    try {
+      const loggedIn = await account.createEmailPasswordSession(
+        email,
+        password,
+      );
+      setUser(loggedIn);
+      navigate("/dashboard");
+    } catch (error: unknown) {
+      console.log(error, "User Login");
+    } finally {
+      setLoading(false);
+    }
   };
 
   // HANDLE PASSWORD VISIBILITY

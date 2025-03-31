@@ -1,14 +1,19 @@
 import Logo from "@/assets/horizon-logo.svg";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { cn } from "@/lib/utils";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useUser } from "@/hooks/useUser";
-import { RegisterFormInputs } from "@/context/user";
+import { RegisterFormInputs } from "@/context/userAuth";
 import { Eye, EyeClosed, Loader } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { account, databases } from "@/lib/appwrite";
+import { ID } from "appwrite";
+
+const DATABASE_ID = import.meta.env.APPWRITE_DATABASE_ID;
+const USERS_COLLECTION_ID = import.meta.env.APPWRITE_USER_COLLECTION_ID;
 
 const schema = yup.object().shape({
   firstName: yup.string().required("Enter your first name"),
@@ -32,7 +37,8 @@ const schema = yup.object().shape({
 });
 
 export default function Register() {
-  const user = useUser();
+  const navigate = useNavigate();
+  const { loading, setLoading } = useUser();
   const [visible, setVisible] = useState<boolean>(false);
   const {
     register,
@@ -42,11 +48,35 @@ export default function Register() {
     resolver: yupResolver(schema),
   });
 
-  const handleUserRegister = (data: any) => {
+  const handleUserRegister = async (data: RegisterFormInputs) => {
     console.log(data);
-    user?.register(data);
+
+    setLoading(true);
+    try {
+      const { email, password } = data;
+      const user = await account.create(ID.unique(), email, password);
+
+      // ADD USER DATA TO DATABASE
+      await databases.createDocument(
+        DATABASE_ID,
+        USERS_COLLECTION_ID,
+        "unique()",
+        {
+          userId: user.$id,
+          ...data,
+        },
+      );
+
+      // ROUTE TO EMAIL VERIFICATION PAGE
+      navigate(`/verify?email=${data?.email}`);
+    } catch (error: unknown) {
+      console.log(error, "User register");
+    } finally {
+      setLoading(false);
+    }
   };
 
+  // HANDLE PASSWORD VISIBILITY
   const toggleVisibility = () => {
     setVisible((prev: boolean) => !prev);
   };
@@ -266,10 +296,10 @@ export default function Register() {
 
         <div className="mt-6">
           <Button
-            disabled={user?.loading}
+            disabled={loading}
             className="from-main to-main2 hover:bg-secondary focus:ring-main disabled:bg-main/50 flex h-auto w-full cursor-pointer items-center justify-center gap-2 rounded-md border border-transparent bg-gradient-to-r px-4 py-2.5 font-semibold text-white focus:ring-2 focus:ring-offset-2 focus:outline-none"
           >
-            {user?.loading && (
+            {loading && (
               <Loader className="animate-spin" color="#fff" size="20" />
             )}
             Sign up

@@ -132,7 +132,7 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply text-body leading-[150%] antialiased font-inter;
+    @apply text-body font-inter leading-[150%] antialiased;
   }
 
   h1,
@@ -143,6 +143,10 @@
   }
 
   img {
-    @apply max-w-full h-auto;
+    @apply h-auto max-w-full;
   }
+}
+
+.bg-verify {
+  background-image: url(./assets/pattern.png);
 }
