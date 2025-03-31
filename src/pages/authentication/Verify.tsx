@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { useUser } from "@/hooks/useUser";
+// import { useUser } from "@/hooks/useUser";
 import { account } from "@/lib/appwrite";
 import { MailCheck, MailOpen } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -11,9 +11,9 @@ export default function Verify() {
   const urlParams = new URLSearchParams(window.location.search);
   const secret = urlParams.get("secret");
   const userId = urlParams.get("userId");
-  const user = useUser();
+  // const user = useUser();
   const [timeLeft, setTimeLeft] = useState(SECS_BEFORE_RESEND_MAIL);
-  const [status, setStatus] = useState<string>("failed");
+  const [status, setStatus] = useState<string>("sent");
 
   function displayEmailUi(status: string) {
     switch (status) {
@@ -31,7 +31,11 @@ export default function Verify() {
 
   useEffect(() => {
     async function verify() {
-      account.updateVerification(userId as string, secret as string);
+      try {
+        await account.updateVerification(userId as string, secret as string);
+      } catch (error: any) {
+        console.log(error);
+      }
     }
     verify();
   }, [secret, userId]);
