@@ -1,16 +1,17 @@
 import Logo from "@/assets/horizon-logo.svg";
 import { cn } from "@/lib/utils";
-import { LogOut } from "lucide-react";
+import { Bell, EllipsisVertical, LogOut, UserCircle } from "lucide-react";
 import { Link, useLocation } from "react-router";
 import UserImg from "@/assets/jsmastery.png";
 import { navMenus } from "@/utils/dashboard";
 import { useUser } from "@/hooks/useUser";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 
 const DasboardSidebar = () => {
   const location = useLocation();
   const { logout } = useUser();
   return (
-    <aside className="hidden h-screen w-full flex-col justify-between border-r border-gray-200 bg-white px-6 py-8 lg:flex">
+    <aside className="hidden h-screen w-full flex-col justify-between border-r border-gray-200 bg-white px-6 py-8 pb-5 lg:flex">
       <div>
         <Link to="/dashboard">
           <img src={Logo} alt="Horizon Logo" />
@@ -52,25 +53,70 @@ const DasboardSidebar = () => {
         </nav>
       </div>
 
-      <div className="flex items-center justify-between border-t border-gray-200 py-4">
-        <div className="inline-flex items-center gap-3">
-          <img
-            src={UserImg}
-            alt="user avatar"
-            className="h-12 w-12 rounded-full"
-          />
-          <div className="flex flex-col">
-            <p className="text-label text-sm font-semibold">Adrian Hajdin</p>
-            <p className="text-body-light text-sm">adrian@jsmastery.pro</p>
-          </div>
-        </div>
-        <span
-          aria-label="Logout"
-          onClick={() => logout()}
-          className="text-body-light cursor-pointer"
-        >
-          <LogOut size={24} />
-        </span>
+      <div className="flex items-center justify-between border-t border-gray-200 pt-4">
+        <Popover>
+          <PopoverTrigger className="flex w-full cursor-pointer items-center justify-between">
+            <div className="flex items-center gap-3">
+              <img
+                src={UserImg}
+                alt="user avatar"
+                className="h-10 w-10 rounded-full"
+              />
+              <div className="flex grow flex-col">
+                <p className="text-label text-left text-xs font-semibold">
+                  Adrian Hajdin
+                </p>
+                <p className="text-body-light text-left text-xs">
+                  adrian@jsmastery.pro
+                </p>
+              </div>
+            </div>
+            <EllipsisVertical className="" />
+          </PopoverTrigger>
+          <PopoverContent side="top" className="w-[250px] p-0">
+            <div className="flex items-center gap-3 border-b p-1">
+              <img
+                src={UserImg}
+                alt="user avatar"
+                className="h-10 w-10 rounded-full"
+              />
+              <div className="flex flex-col">
+                <p className="text-label text-left text-xs font-semibold">
+                  Adrian Hajdin
+                </p>
+                <p className="text-body-light text-left text-xs">
+                  adrian@jsmastery.pro
+                </p>
+              </div>
+            </div>
+
+            <div className="p-1">
+              <Link
+                to="/dashboard/my-account"
+                className="text-label hover:text-main flex cursor-pointer gap-2 rounded-sm p-2 hover:bg-blue-50"
+              >
+                <UserCircle size={20} />
+                <span className="text-sm">Acount</span>
+              </Link>
+              <div className="text-label hover:text-main flex cursor-pointer gap-2 rounded-sm p-2 hover:bg-blue-50">
+                <Bell size={20} />
+                <span className="text-sm">Notification</span>
+              </div>
+            </div>
+
+            <hr />
+            <div className="p-1">
+              <div
+                aria-label="Logout"
+                onClick={() => logout()}
+                className="text-label hover:text-main flex cursor-pointer gap-2 rounded-sm p-2 hover:bg-blue-50"
+              >
+                <LogOut size={20} />
+                <span className="text-sm">Logout</span>
+              </div>
+            </div>
+          </PopoverContent>
+        </Popover>
       </div>
     </aside>
   );

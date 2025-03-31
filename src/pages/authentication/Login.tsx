@@ -6,7 +6,8 @@ import { useForm } from "react-hook-form";
 import { cn } from "@/lib/utils";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Button } from "@/components/ui/button";
-import { Loader } from "lucide-react";
+import { Eye, EyeClosed, Loader } from "lucide-react";
+import { useState } from "react";
 
 const schema = yup.object().shape({
   email: yup.string().email("Enter a valid email").required("Enter your email"),
@@ -15,7 +16,7 @@ const schema = yup.object().shape({
 
 export default function Login() {
   const user = useUser();
-
+  const [visible, setVisible] = useState<boolean>(false);
   const {
     register,
     formState: { errors },
@@ -24,9 +25,15 @@ export default function Login() {
     resolver: yupResolver(schema),
   });
 
+  // HANDLE USER LOGIN
   const handleUserLogin = (data: { email: string; password: string }) => {
     console.log(data);
     user?.login(data.email, data.password);
+  };
+
+  // HANDLE PASSWORD VISIBILITY
+  const toggleVisibility = () => {
+    setVisible((prev: boolean) => !prev);
   };
   return (
     <div className="w-full sm:w-[450px]">
@@ -69,18 +76,26 @@ export default function Login() {
           >
             Password
           </label>
-          <input
-            {...register("password")}
-            type="password"
-            name="password"
-            id="password"
-            autoComplete="current-password"
-            placeholder="Enter your password"
-            className={cn(
-              "placeholder:text-body-light focus:ring-main focus:border-main mt-1 block h-11 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none",
-              errors.password && "border-red-600",
-            )}
-          />
+          <div className="relative">
+            <input
+              {...register("password")}
+              type={visible ? "text" : "password"}
+              name="password"
+              id="password"
+              autoComplete="current-password"
+              placeholder="Enter your password"
+              className={cn(
+                "placeholder:text-body-light focus:ring-main focus:border-main mt-1 block h-11 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none",
+                errors.password && "border-red-600",
+              )}
+            />
+            <span
+              onClick={toggleVisibility}
+              className="text-body-light absolute right-4 bottom-1/2 translate-y-1/2 cursor-pointer"
+            >
+              {visible ? <Eye size={20} /> : <EyeClosed size={20} />}
+            </span>
+          </div>
           {errors.password && (
             <p className="mt-2 text-sm text-red-600">
               {errors.password.message as string}

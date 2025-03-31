@@ -10,6 +10,7 @@ import TransactionHistory from "./pages/dashboard/TransactionHistory";
 import ConnectBank from "./pages/dashboard/ConnectBank";
 import Homepage from "./pages/Homepage";
 import Verify from "./pages/authentication/Verify";
+import Account from "./pages/dashboard/Account";
 
 function App() {
   return (
@@ -19,8 +20,8 @@ function App() {
         <Route element={<AuthLayout />}>
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
-          <Route path="verify" element={<Verify />} />
         </Route>
+        <Route path="verify" element={<Verify />} />
 
         <Route path="dashboard" element={<DashboardLayout />}>
           <Route index element={<Home />} />
@@ -28,6 +29,7 @@ function App() {
           <Route path="payment-transfer" element={<Payments />} />
           <Route path="transaction-history" element={<TransactionHistory />} />
           <Route path="connect-bank" element={<ConnectBank />} />
+          <Route path="my-account" element={<Account />} />
         </Route>
       </Routes>
     </BrowserRouter>
