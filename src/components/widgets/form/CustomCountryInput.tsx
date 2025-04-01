@@ -14,8 +14,12 @@ export default function CustomCountryInput({
   errors,
   control,
   options,
+  setValue,
 }: Props) {
-  const { dispatch } = useGetCountryState();
+  const { state, dispatch } = useGetCountryState();
+  const selectedState = options?.find(
+    (item) => item?.id === parseInt(state.currentState, 10),
+  );
   return (
     <div className={""}>
       <label
@@ -29,9 +33,10 @@ export default function CustomCountryInput({
         control={control}
         render={({ field: { onChange, value } }) => (
           <Select
-            onValueChange={(val) =>
-              onChange(dispatch({ type: "country", payload: val }))
-            }
+            onValueChange={(val) => {
+              onChange(dispatch({ type: "country", payload: val }));
+              setValue("state", selectedState?.name);
+            }}
             value={value}
           >
             <SelectTrigger className="w-full">
@@ -39,7 +44,7 @@ export default function CustomCountryInput({
             </SelectTrigger>
             <SelectContent>
               {options?.map((_country) => (
-                <SelectItem key={_country?.id} value={_country?.id}>
+                <SelectItem key={_country?.id} value={String(_country?.id)}>
                   {_country?.name}
                 </SelectItem>
               ))}

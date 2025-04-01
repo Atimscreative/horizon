@@ -4,7 +4,7 @@ import { GetCountries, GetState } from "react-country-state-city";
 export default function useGetCountryList(currentCountry: string) {
   const [countriesList, setCountriesList] = useState<any[]>([]);
   const [stateList, setStateList] = useState<any[]>([]);
-  console.log(currentCountry, "useGet");
+  // console.log(currentCountry, "useGet");
 
   useEffect(() => {
     GetCountries().then((result) => {

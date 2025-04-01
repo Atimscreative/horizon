@@ -1,6 +1,6 @@
 import Logo from "@/assets/horizon-logo.svg";
 import { useUser } from "@/hooks/useUser";
-import { Link, useNavigate } from "react-router";
+import { Link } from "react-router";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { cn } from "@/lib/utils";
@@ -8,7 +8,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Button } from "@/components/ui/button";
 import { Eye, EyeClosed, Loader } from "lucide-react";
 import { useState } from "react";
-import { account } from "@/lib/appwrite";
 
 const schema = yup.object().shape({
   email: yup.string().email("Enter a valid email").required("Enter your email"),
@@ -16,8 +15,7 @@ const schema = yup.object().shape({
 });
 
 export default function Login() {
-  const navigate = useNavigate();
-  const { setLoading, user, setUser } = useUser();
+  const { login, loading } = useUser();
   const [visible, setVisible] = useState<boolean>(false);
   const {
     register,
@@ -29,20 +27,8 @@ export default function Login() {
 
   // HANDLE USER LOGIN
   const handleUserLogin = async (data: { email: string; password: string }) => {
-    const { email, password } = data;
-    setLoading(true);
-    try {
-      const loggedIn = await account.createEmailPasswordSession(
-        email,
-        password,
-      );
-      setUser(loggedIn);
-      navigate("/dashboard");
-    } catch (error: unknown) {
-      console.log(error, "User Login");
-    } finally {
-      setLoading(false);
-    }
+    login(data);
+    console.log(data);
   };
 
   // HANDLE PASSWORD VISIBILITY
@@ -146,10 +132,10 @@ export default function Login() {
         <div className="mt-6">
           <Button
             type="submit"
-            disabled={user?.loading}
+            disabled={loading}
             className="from-main to-main2 hover:bg-secondary focus:ring-main disabled:bg-main/50 flex h-auto w-full cursor-pointer items-center justify-center gap-2 rounded-md border border-transparent bg-gradient-to-r px-4 py-2.5 font-semibold text-white focus:ring-2 focus:ring-offset-2 focus:outline-none"
           >
-            {user?.loading && (
+            {loading && (
               <Loader className="animate-spin" color="#fff" size="20" />
             )}
             Login

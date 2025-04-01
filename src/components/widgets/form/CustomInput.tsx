@@ -10,6 +10,7 @@ export type Props = {
   control?: any;
   options?: any[];
   className?: string;
+  setValue?: any;
 };
 
 export default function CustomInput({

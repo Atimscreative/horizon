@@ -1,5 +1,6 @@
 import DasboardSidebar from "@/components/dashboard-comps/DashboardSidebar";
 import MobileDashboardNav from "@/components/dashboard-comps/MobileDashboardNav";
+import { Toaster } from "@/components/ui/sonner";
 import { Outlet } from "react-router";
 
 export default function DashboardLayout() {
@@ -25,16 +26,19 @@ export default function DashboardLayout() {
   //   init();
   // }, [location.pathname, navigate, setUser]);
   return (
-    <section className="grid lg:grid-cols-[300px_1fr]">
-      <div>
-        <MobileDashboardNav />
-        <DasboardSidebar />
-      </div>
-      <div className="h-auto w-full lg:h-screen lg:overflow-y-auto">
+    <>
+      <Toaster richColors position="top-right" />
+      <section className="grid lg:grid-cols-[300px_1fr]">
         <div>
-          <Outlet />
+          <MobileDashboardNav />
+          <DasboardSidebar />
         </div>
-      </div>
-    </section>
+        <div className="h-auto w-full lg:h-screen lg:overflow-y-auto">
+          <div>
+            <Outlet />
+          </div>
+        </div>
+      </section>
+    </>
   );
 }

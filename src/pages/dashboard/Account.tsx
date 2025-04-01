@@ -5,8 +5,12 @@ import CustomStateInput from "@/components/widgets/form/CustomStateInput";
 import UserProfile from "@/components/widgets/form/UserProfile";
 import { useGetCountryState } from "@/hooks/useGetCountry";
 import useGetCountryList from "@/hooks/useGetCountryStateList";
+import { useUser } from "@/hooks/useUser";
+import { databases } from "@/lib/appwrite";
+import { appwriteConfig } from "@/lib/config";
 import { cn } from "@/lib/utils";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { ID } from "appwrite";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 
@@ -28,6 +32,7 @@ const schema = yup.object().shape({
 });
 
 export default function Account() {
+  const { user } = useUser();
   const {
     state: { currentCountry },
   } = useGetCountryState();
@@ -38,9 +43,29 @@ export default function Account() {
     register,
     control,
     formState: { errors },
+    handleSubmit,
+    getValues,
+    setValue,
   } = useForm({
     resolver: yupResolver(schema),
   });
+
+  console.log(getValues(), "getValues()");
+
+  const handleUpdate = async (data: any) => {
+    console.log(data, "Account", user, user?.$id, getValues());
+
+    // try {
+    //   await databases.createDocument(
+    //     appwriteConfig.DATABASE_ID,
+    //     appwriteConfig.USER_COLLECTION_ID,
+    //     ID.unique(),
+    //     { ...data, userId: user?.$id },
+    //   );
+    // } catch (error) {
+    //   console.log(error);
+    // }
+  };
 
   return (
     <section>
@@ -49,10 +74,9 @@ export default function Account() {
         <div className="space-y-6">
           <UserProfile />
 
-          <form id="userProfile">
+          <form id="userProfile" onSubmit={handleSubmit(handleUpdate)}>
             <div className="grid w-[50%] grid-cols-2 gap-4">
               {formData.map((data, index) => {
-                console.log("Rendering field:", data.name); // Debugging
                 if (data?.type === "select" && data?.name === "country") {
                   return (
                     <CustomCountryInput
@@ -61,6 +85,7 @@ export default function Account() {
                       errors={errors}
                       control={control}
                       options={countries}
+                      setValue={setValue}
                     />
                   );
                 } else if (data?.type === "select" && data?.name === "state") {
@@ -71,6 +96,7 @@ export default function Account() {
                       errors={errors}
                       control={control}
                       options={states}
+                      setValue={setValue}
                     />
                   );
                 }
