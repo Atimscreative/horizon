@@ -1,8 +1,14 @@
+/* GOOGL FONTS */
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+
+/* TAILWIND IMPORTS */
 @import "tailwindcss";
 
 @plugin "tailwindcss-animate";
 
 @custom-variant dark (&:is(.dark *));
+
+/* CSS VARIABLES */
 
 :root {
   --background: oklch(1 0 0);
@@ -113,11 +119,12 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-main: oklch(60% 0.2176 257.56);
-  --color-secondary: oklch(66.88% 0.1768 257.85);
+  --color-main2: oklch(66.88% 0.1768 257.85);
   --color-heading: oklch(20.99% 0.0341 263.44);
   --color-body: oklch(44.22% 0.0355 257.79);
   --color-label: oklch(36.95% 0.0381 260.5);
   --color-body-light: oklch(54.44% 0.035 265.11);
+  --font-inter: "Inter", sans-serif;
 }
 
 @layer base {
@@ -125,10 +132,21 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply text-body font-inter leading-[150%] antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply text-heading;
   }
 
   img {
-    @apply max-w-full h-auto;
+    @apply h-auto max-w-full;
   }
+}
+
+.bg-verify {
+  background-image: url(./assets/pattern.png);
 }
