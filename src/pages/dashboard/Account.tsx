@@ -12,18 +12,20 @@ import { cn } from "@/lib/utils";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { ID } from "appwrite";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import * as yup from "yup";
 
 const schema = yup.object().shape({
   firstName: yup.string().required("Enter your first name"),
   lastName: yup.string().required("Enter your last name"),
   address: yup.string().required("Enter your address"),
-  state: yup.string().required("Enter your state"),
+  // country: yup.string().required("Enter your country"),
+  // state: yup.string().required("Enter your state"),
   postalCode: yup.string().required("Enter your postal code"),
-  dateOfBirth: yup
-    .string()
-    .matches(/^\d{4}-\d{2}-\d{2}$/, "Enter a valid date (YYYY-MM-DD)")
-    .required("Enter your date of birth"),
+  // dateOfBirth: yup
+  //   .string()
+  //   .matches(/^\d{4}-\d{2}-\d{2}$/, "Enter a valid date (YYYY-MM-DD)")
+  //   .required("Enter your date of birth"),
   ssn: yup
     .string()
     .matches(/^\d{4}$/, "Enter last 4 digits of SSN")
@@ -50,21 +52,30 @@ export default function Account() {
     resolver: yupResolver(schema),
   });
 
-  console.log(getValues(), "getValues()");
+  // console.log(getValues(), "getValues()");
 
   const handleUpdate = async (data: any) => {
-    console.log(data, "Account", user, user?.$id, getValues());
+    console.log(
+      { ...data, userId: user?.$id },
+      "Account",
+      user,
+      user?.$id,
+      getValues(),
+    );
 
-    // try {
-    //   await databases.createDocument(
-    //     appwriteConfig.DATABASE_ID,
-    //     appwriteConfig.USER_COLLECTION_ID,
-    //     ID.unique(),
-    //     { ...data, userId: user?.$id },
-    //   );
-    // } catch (error) {
-    //   console.log(error);
-    // }
+    try {
+      const db = await databases.createDocument(
+        appwriteConfig.DATABASE_ID,
+        appwriteConfig.USER_COLLECTION_ID,
+        ID.unique(),
+        { ...data, userId: user?.$id },
+      );
+      toast.success("Data Updated!");
+      console.log(db, "DB DB");
+    } catch (error: any) {
+      console.log(error);
+      toast.error(error.message);
+    }
   };
 
   return (
@@ -77,6 +88,8 @@ export default function Account() {
           <form id="userProfile" onSubmit={handleSubmit(handleUpdate)}>
             <div className="grid w-[50%] grid-cols-2 gap-4">
               {formData.map((data, index) => {
+                // console.log(errors, "ERRR");
+
                 if (data?.type === "select" && data?.name === "country") {
                   return (
                     <CustomCountryInput
@@ -117,7 +130,10 @@ export default function Account() {
                 );
               })}
             </div>
-            <Button className="bg-main hover:bg-main2 mt-4 h-10 px-8">
+            <Button
+              type="submit"
+              className="bg-main hover:bg-main2 mt-4 h-10 cursor-pointer px-8"
+            >
               Update
             </Button>
           </form>
@@ -153,22 +169,22 @@ const formData = [
     required: true,
   },
 
-  {
-    type: "select",
-    name: "country",
-    label: "Country",
-    placeholder: "Your country",
-    error_message: "Enter your country",
-    required: true,
-  },
-  {
-    type: "select",
-    name: "state",
-    label: "State",
-    placeholder: "Your state",
-    error_message: "Enter your state",
-    required: true,
-  },
+  // {
+  //   type: "select",
+  //   name: "country",
+  //   label: "Country",
+  //   placeholder: "Your country",
+  //   error_message: "Enter your country",
+  //   required: true,
+  // },
+  // {
+  //   type: "select",
+  //   name: "state",
+  //   label: "State",
+  //   placeholder: "Your state",
+  //   error_message: "Enter your state",
+  //   required: true,
+  // },
   // {
   //   type: "text",
   //   name: "city",

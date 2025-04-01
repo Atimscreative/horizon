@@ -10,6 +10,7 @@ export const UserContext = createContext<{
   logout: () => Promise<void>;
   sendVerificationEmail: () => Promise<void>;
   confirmEmailVerification: (userId: string, secret: string) => Promise<void>;
+  getSession: () => Promise<void>;
 } | null>(null);
 
 export function useUser() {
@@ -26,6 +27,7 @@ export function useUser() {
       register: async () => {},
       sendVerificationEmail: async () => {},
       confirmEmailVerification: async () => {},
+      getSession: async () => {},
     };
   }
 

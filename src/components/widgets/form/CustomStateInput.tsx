@@ -26,8 +26,7 @@ export default function CustomStateInput({
   const selectedState = options?.find(
     (item) => item?.id === parseInt(state.currentState, 10),
   );
-
-  console.log(errors);
+  console.log(errors[data?.name], "Error state");
 
   return (
     <div className={""}>
@@ -43,8 +42,9 @@ export default function CustomStateInput({
         render={({ field: { onChange, value } }) => (
           <Select
             onValueChange={(val) => {
-              onChange(dispatch({ type: "state", payload: val }));
-              setValue("state", selectedState?.name);
+              onChange(val);
+              dispatch({ type: "state", payload: val });
+              setValue("state", String(selectedState?.name));
             }}
             value={value}
           >
@@ -53,7 +53,7 @@ export default function CustomStateInput({
             </SelectTrigger>
             <SelectContent>
               {options?.map((_state) => (
-                <SelectItem key={_state?.id} value={String(_state?.id)}>
+                <SelectItem key={_state?.id} value={_state.name}>
                   {_state?.name}
                 </SelectItem>
               ))}

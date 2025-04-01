@@ -27,6 +27,8 @@ export default function Login() {
 
   // HANDLE USER LOGIN
   const handleUserLogin = async (data: { email: string; password: string }) => {
+    // getSession();
+
     login(data);
     console.log(data);
   };
@@ -35,6 +37,7 @@ export default function Login() {
   const toggleVisibility = () => {
     setVisible((prev: boolean) => !prev);
   };
+
   return (
     <div className="w-full sm:w-[450px]">
       <div className="mb-8">

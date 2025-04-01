@@ -31,6 +31,24 @@ export default function UserProvider(props: any) {
     const { email, password } = data;
     setLoading(true);
 
+    // CHECK IF USER HAS ACTIVE SESSION ON THE CURRENT DEVICE
+    // try {
+    //   const session = await account.getSession(
+    //     "current", // sessionId
+    //   );
+
+    //   if (session) {
+    //     window.location.replace("/dashboard");
+    //     return; // Stop execution if session exists
+    //   }
+
+    //   console.log(session, "Session");
+    // } catch (error: any) {
+    //   console.log(error);
+    //   console.log("No active session, proceeding with login...");
+    // }
+
+    //  LOGIN IF NOT ACTIVE CURRENT DEVICE SESSION
     try {
       const loggedIn = await account.createEmailPasswordSession(
         email,
@@ -41,6 +59,10 @@ export default function UserProvider(props: any) {
     } catch (error: any) {
       console.log(error, "User Login");
       toast.error(error?.message);
+
+      if (error.type === "user_session_already_exists") {
+        toast.warning("A user session already exist, go to dashboard.");
+      }
     } finally {
       setLoading(false);
     }
@@ -115,6 +137,19 @@ export default function UserProvider(props: any) {
     }
   }
 
+  // CHECK IF USER AS ACTIVE SESSION
+  async function getSession() {
+    try {
+      const session = await account.getSession(
+        "current", // sessionId
+      );
+      window.location.replace("/dashboard");
+      console.log(session, "Session");
+    } catch (error: any) {
+      console.log(error);
+    }
+  }
+
   useEffect(() => {
     if (
       window.location.pathname === "/register" ||
@@ -138,9 +173,35 @@ export default function UserProvider(props: any) {
         register,
         sendVerificationEmail,
         confirmEmailVerification,
+        getSession,
       }}
     >
       {props.children}
     </UserContext.Provider>
   );
 }
+
+/* 
+{
+    "message": "Creation of a session is prohibited when a session is active.",
+    "code": 401,
+    "type": "user_session_already_exists",
+    "version": "1.6.2"
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+*/
